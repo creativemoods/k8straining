@@ -32,7 +32,7 @@ spec:
       priorityClassName: business-app-critical
 
       containers:
-      - image: env-9264065.sh1.hidora.com/<###image###>
+      - image: <###image###>
         imagePullPolicy: IfNotPresent
         name: myapp-helloworld
 
