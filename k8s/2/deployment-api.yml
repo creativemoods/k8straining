@@ -34,7 +34,7 @@ spec:
 
         envFrom:
           - configMapRef:
-              name: apiconfigmap
+              name: configmap-appversion
 
         resources:
           requests:
@@ -70,6 +70,6 @@ spec:
           timeoutSeconds: 5
       volumes:
       - name: appconf
-        configMap:
-          name: appconf
+        secret:
+          secretName: secret-appconf
 
