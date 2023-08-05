@@ -1,11 +1,11 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: longhornpvc
+  name: dynamicpvc
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: "longhorn"
+  storageClassName: "default"
   resources:
     requests:
-      storage: 20Mi
+      storage: 1Gi

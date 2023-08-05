@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: app-consuming-pvc
+  name: app-consuming-pvc-dynamic
 spec:
   volumes:
     - name: app-storage
       persistentVolumeClaim:
-        claimName: staticpvc
+        claimName: dynamicpvc
   containers:
   - image: alpine
     name: app
