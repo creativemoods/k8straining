@@ -9,5 +9,6 @@ FROM alpine:latest
 WORKDIR /root/
 COPY --from=builder /go/src/training/helloworld/app ./
 COPY --from=builder /go/src/training/helloworld/entrypoint.sh ./
+RUN chmod 755 /root/entrypoint.sh
 ENTRYPOINT ["/root/entrypoint.sh"]
 CMD ["./app"]
