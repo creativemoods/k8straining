@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: cronjob-mysql-backup
-  namespace: <prenom>-test3
+  namespace: studentx-test3
 spec:
   schedule: "*/1 * * * *"
   concurrencyPolicy: Forbid
@@ -20,5 +20,5 @@ spec:
               - echo "Backuping database....";
                 mysqldump --version;
                 sleep 10;
-                echo "Database successfuly backuped !"
+                echo "Database successfuly backed up !"
           restartPolicy: Never
