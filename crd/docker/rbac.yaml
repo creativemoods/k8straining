@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cake-controller
+  namespace: studentx
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: cake-controller
+  namespace: studentx
+rules:
+  - apiGroups: ["bakery.myorg.io"]
+    resources: ["cakes"]
+    verbs: ["get","list","watch", "patch", "update"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get","list","create","delete"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create","patch","update"]
+  - apiGroups: ["bakery.myorg.io"]
+    resources: ["cakes/finalizers"]
+    verbs: ["update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: cake-controller
+  namespace: studentx
+subjects:
+  - kind: ServiceAccount
+    name: cake-controller
+    namespace: studentx
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: cake-controller

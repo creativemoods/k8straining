@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cake-controller
+  namespace: studentx
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: cake-controller }
+  template:
+    metadata:
+      labels: { app: cake-controller }
+    spec:
+      serviceAccountName: cake-controller
+      imagePullSecrets:
+      - name: secret-tempreg
+      containers:
+        - name: controller
+          image: registry.creativemoods.pt/studentx/cake-controller:1.0.1
+          args:
+            # tell kopf to watch only *this* namespace
+            - kopf
+            - run
+            - --standalone
+            - --namespace=$(POD_NAMESPACE)
+            - /app/cake_controller.py
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace

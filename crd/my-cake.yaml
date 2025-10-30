@@ -2,7 +2,7 @@ apiVersion: bakery.myorg.io/v1
 kind: Cake
 metadata:
   name: my-cake
-#  namespace: studentx
+  namespace: studentx
 spec:
   flavor: chocolate
   bakeTimeSeconds: 8
