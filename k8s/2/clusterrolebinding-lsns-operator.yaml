@@ -2,12 +2,12 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: clusterrolebinding-lsns-operateur
+  name: clusterrolebinding-lsns-operator
 subjects:
 - kind: ServiceAccount
-  name: operateur
-  namespace: estest-<prenom>
+  name: operator
+  namespace: studentx-test3
 roleRef:
   kind: ClusterRole
-  name: clusterrole-lsns-<prenom>
+  name: clusterrole-lsns-studentx
   apiGroup: rbac.authorization.k8s.io
