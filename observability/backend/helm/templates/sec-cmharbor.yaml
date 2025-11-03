@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sec-cmharbor
+  namespace: {{ .Release.Namespace }}
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: >
+    {{- $username := required "Username is required" .Values.image.repoLoginUsername }}
+    {{- $password := required "Password is required" .Values.image.repoLoginPassword }}
+    {{- $url := required "Registry URL is required" .Values.image.repoLoginUrl }}
+    {{- $auth := printf "%s:%s" $username $password | b64enc }}
+    {{- $json := dict "auths" (dict $url (dict "auth" $auth)) | toJson | b64enc }}
+    {{ $json }}

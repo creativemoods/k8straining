@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-frontend
+  namespace: {{ .Release.Namespace }}
+  labels:
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/instance: {{ .Chart.Name }}
+    app.kubernetes.io/version: "{{ .Chart.Version }}"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: {{ required ".Values.frontend.replicas entry is required!" .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: studentx
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: studentx
+        tier: frontend
+        helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+        app.kubernetes.io/name: {{ .Chart.Name }}
+        app.kubernetes.io/instance: {{ .Chart.Name }}
+        app.kubernetes.io/version: "{{ .Chart.Version }}"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      imagePullSecrets:
+      - name: sec-cmharbor
+      priorityClassName: {{ required ".Values.priorityClass.name entry is required!" .Values.priorityClass.name }}
+      containers:
+      - image: {{ required ".Values.image.repository entry is required!" .Values.image.repository }}:{{ required ".Chart.AppVersion entry is required!" .Chart.AppVersion }}
+        imagePullPolicy: {{ required ".Values.image.pullPolicy entry is required!" .Values.image.pullPolicy }}
+        name: frontend
+
+        ports:
+        - containerPort: 3000
+          name: frontend
+
+        startupProbe:
+          tcpSocket:
+            port: 3000
+          failureThreshold: 12
+          periodSeconds: 10
+
+        livenessProbe:
+          tcpSocket:
+            port: 3000
+          periodSeconds: 60
+          failureThreshold: 1
+          initialDelaySeconds: 0
+
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          periodSeconds: 10
+          failureThreshold: 3
+          initialDelaySeconds: 0
+          timeoutSeconds: 5
+
+        resources:
+          requests:
+            memory: "{{ required ".Values.frontend.ressourceRequest.memory entry is required!" .Values.frontend.ressourceRequest.memory }}"
+            cpu: "{{ required ".Values.frontend.ressourceRequest.cpu entry is required!" .Values.frontend.ressourceRequest.cpu }}"
+          limits:
+            memory: "{{ required ".Values.frontend.ressourceLimit.memory entry is required!" .Values.frontend.ressourceLimit.memory }}"
+            cpu: "{{ required ".Values.frontend.ressourceLimit.cpu entry is required!" .Values.frontend.ressourceLimit.cpu }}"

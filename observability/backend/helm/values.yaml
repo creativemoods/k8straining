@@ -1,0 +1,20 @@
+priorityClass:
+  name: business-app-non-critical
+
+image:
+  repository: registry.creativemoods.pt/studentx/studentx-backend # Override with --set "image.repository=$REGISTRY_URL/$REGISTRY_USER/studentx-backend"
+  repoLoginUrl: registry.creativemoods.pt # Override with --set "image.repoLoginUrl=$REGISTRY_URL"
+  repoLoginUsername: studentx # Override with --set "image.repoLoginUsername=$REGISTRY_USER"
+  repoLoginPassword: xxx # Override with --set "image.repoLoginPassword=$REGISTRY_PASSWORD"
+  pullPolicy: IfNotPresent
+
+ingress:
+  name: studentx.creativemoods.pt # Override with --set "ingress.name=$DOMAIN"
+
+backend:
+  ressourceRequest:
+    memory: 128M
+    cpu: 100m
+  ressourceLimit:
+    memory: 256M
+    cpu: 100m

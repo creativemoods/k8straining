@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-backend
+  namespace: {{ .Release.Namespace }}
+  labels:
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/instance: {{ .Chart.Name }}
+    app.kubernetes.io/version: "{{ .Chart.Version }}"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: studentx
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: studentx
+        tier: backend
+        helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+        app.kubernetes.io/name: {{ .Chart.Name }}
+        app.kubernetes.io/instance: {{ .Chart.Name }}
+        app.kubernetes.io/version: "{{ .Chart.Version }}"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      imagePullSecrets:
+      - name: sec-cmharbor
+      priorityClassName: {{ required ".Values.priorityClass.name entry is required!" .Values.priorityClass.name }}
+      containers:
+      - image: {{ required ".Values.image.repository entry is required!" .Values.image.repository }}:{{ required ".Chart.AppVersion entry is required!" .Chart.AppVersion }}
+        imagePullPolicy: {{ required ".Values.image.pullPolicy entry is required!" .Values.image.pullPolicy }}
+        name: backend
+
+        ports:
+        - containerPort: 5000
+          name: backend
+
+        startupProbe:
+          tcpSocket:
+            port: 5000
+          failureThreshold: 12
+          periodSeconds: 10
+
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 5000
+          periodSeconds: 60
+          failureThreshold: 1
+          initialDelaySeconds: 0
+
+        readinessProbe:
+          httpGet:
+            path: /api/ready
+            port: 5000
+          periodSeconds: 10
+          failureThreshold: 3
+          initialDelaySeconds: 0
+          timeoutSeconds: 5
+
+        resources:
+          requests:
+            memory: "{{ required ".Values.backend.ressourceRequest.memory entry is required!" .Values.backend.ressourceRequest.memory }}"
+            cpu: "{{ required ".Values.backend.ressourceRequest.cpu entry is required!" .Values.backend.ressourceRequest.cpu }}"
+          limits:
+            memory: "{{ required ".Values.backend.ressourceLimit.memory entry is required!" .Values.backend.ressourceLimit.memory }}"
+            cpu: "{{ required ".Values.backend.ressourceLimit.cpu entry is required!" .Values.backend.ressourceLimit.cpu }}"
