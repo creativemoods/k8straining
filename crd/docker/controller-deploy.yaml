@@ -13,10 +13,10 @@ spec:
     spec:
       serviceAccountName: cake-controller
       imagePullSecrets:
-      - name: secret-tempreg
+      - name: sec-cmregistry
       containers:
         - name: controller
-          image: registry.creativemoods.pt/studentx/cake-controller:1.0.1
+          image: registry.creativemoods.pt/studentx/cake-controller:latest
           args:
             # tell kopf to watch only *this* namespace
             - kopf
